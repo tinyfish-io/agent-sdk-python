@@ -35,10 +35,10 @@ client = Tinyfish(
     api_key=os.environ.get("TINYFISH_API_KEY"),  # This is the default and can be omitted
 )
 
-response = client.automation.run_with_sse(
-    goal="REPLACE_ME",
-    url="REPLACE_ME",
+run = client.runs.retrieve(
+    "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
 )
+print(run.run_id)
 ```
 
 While you can provide an `api_key` keyword argument,
@@ -61,10 +61,10 @@ client = AsyncTinyfish(
 
 
 async def main() -> None:
-    response = await client.automation.run_with_sse(
-        goal="REPLACE_ME",
-        url="REPLACE_ME",
+    run = await client.runs.retrieve(
+        "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
     )
+    print(run.run_id)
 
 
 asyncio.run(main())
@@ -97,10 +97,10 @@ async def main() -> None:
         api_key=os.environ.get("TINYFISH_API_KEY"),  # This is the default and can be omitted
         http_client=DefaultAioHttpClient(),
     ) as client:
-        response = await client.automation.run_with_sse(
-            goal="REPLACE_ME",
-            url="REPLACE_ME",
+        run = await client.runs.retrieve(
+            "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
         )
+        print(run.run_id)
 
 
 asyncio.run(main())
@@ -114,23 +114,6 @@ Nested request parameters are [TypedDicts](https://docs.python.org/3/library/typ
 - Converting to a dictionary, `model.to_dict()`
 
 Typed requests and responses provide autocomplete and documentation within your editor. If you would like to see type errors in VS Code to help catch bugs earlier, set `python.analysis.typeCheckingMode` to `basic`.
-
-## Nested params
-
-Nested parameters are dictionaries, typed using `TypedDict`, for example:
-
-```python
-from tinyfish import Tinyfish
-
-client = Tinyfish()
-
-response = client.automation.run_with_sse(
-    goal="Find the pricing page and extract all plan details",
-    url="https://example.com",
-    proxy_config={"enabled": True},
-)
-print(response.proxy_config)
-```
 
 ## Handling errors
 
@@ -148,9 +131,8 @@ from tinyfish import Tinyfish
 client = Tinyfish()
 
 try:
-    client.automation.run_with_sse(
-        goal="REPLACE_ME",
-        url="REPLACE_ME",
+    client.runs.retrieve(
+        "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
     )
 except tinyfish.APIConnectionError as e:
     print("The server could not be reached")
@@ -194,9 +176,8 @@ client = Tinyfish(
 )
 
 # Or, configure per-request:
-client.with_options(max_retries=5).automation.run_with_sse(
-    goal="REPLACE_ME",
-    url="REPLACE_ME",
+client.with_options(max_retries=5).runs.retrieve(
+    "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
 )
 ```
 
@@ -220,9 +201,8 @@ client = Tinyfish(
 )
 
 # Override per-request:
-client.with_options(timeout=5.0).automation.run_with_sse(
-    goal="REPLACE_ME",
-    url="REPLACE_ME",
+client.with_options(timeout=5.0).runs.retrieve(
+    "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
 )
 ```
 
@@ -264,14 +244,13 @@ The "raw" Response object can be accessed by prefixing `.with_raw_response.` to 
 from tinyfish import Tinyfish
 
 client = Tinyfish()
-response = client.automation.with_raw_response.run_with_sse(
-    goal="REPLACE_ME",
-    url="REPLACE_ME",
+response = client.runs.with_raw_response.retrieve(
+    "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
 )
 print(response.headers.get('X-My-Header'))
 
-automation = response.parse()  # get the object that `automation.run_with_sse()` would have returned
-print(automation)
+run = response.parse()  # get the object that `runs.retrieve()` would have returned
+print(run.run_id)
 ```
 
 These methods return an [`APIResponse`](https://github.com/stainless-sdks/tinyfish-python/tree/main/src/tinyfish/_response.py) object.
@@ -285,9 +264,8 @@ The above interface eagerly reads the full response body when you make the reque
 To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
 
 ```python
-with client.automation.with_streaming_response.run_with_sse(
-    goal="REPLACE_ME",
-    url="REPLACE_ME",
+with client.runs.with_streaming_response.retrieve(
+    "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
 ) as response:
     print(response.headers.get("X-My-Header"))
 

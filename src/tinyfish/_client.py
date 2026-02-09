@@ -31,9 +31,8 @@ from ._base_client import (
 )
 
 if TYPE_CHECKING:
-    from .resources import runs, automation
+    from .resources import runs
     from .resources.runs import RunsResource, AsyncRunsResource
-    from .resources.automation import AutomationResource, AsyncAutomationResource
 
 __all__ = [
     "Timeout",
@@ -101,12 +100,6 @@ class Tinyfish(SyncAPIClient):
             custom_query=default_query,
             _strict_response_validation=_strict_response_validation,
         )
-
-    @cached_property
-    def automation(self) -> AutomationResource:
-        from .resources.automation import AutomationResource
-
-        return AutomationResource(self)
 
     @cached_property
     def runs(self) -> RunsResource:
@@ -283,12 +276,6 @@ class AsyncTinyfish(AsyncAPIClient):
         )
 
     @cached_property
-    def automation(self) -> AsyncAutomationResource:
-        from .resources.automation import AsyncAutomationResource
-
-        return AsyncAutomationResource(self)
-
-    @cached_property
     def runs(self) -> AsyncRunsResource:
         from .resources.runs import AsyncRunsResource
 
@@ -414,12 +401,6 @@ class TinyfishWithRawResponse:
         self._client = client
 
     @cached_property
-    def automation(self) -> automation.AutomationResourceWithRawResponse:
-        from .resources.automation import AutomationResourceWithRawResponse
-
-        return AutomationResourceWithRawResponse(self._client.automation)
-
-    @cached_property
     def runs(self) -> runs.RunsResourceWithRawResponse:
         from .resources.runs import RunsResourceWithRawResponse
 
@@ -431,12 +412,6 @@ class AsyncTinyfishWithRawResponse:
 
     def __init__(self, client: AsyncTinyfish) -> None:
         self._client = client
-
-    @cached_property
-    def automation(self) -> automation.AsyncAutomationResourceWithRawResponse:
-        from .resources.automation import AsyncAutomationResourceWithRawResponse
-
-        return AsyncAutomationResourceWithRawResponse(self._client.automation)
 
     @cached_property
     def runs(self) -> runs.AsyncRunsResourceWithRawResponse:
@@ -452,12 +427,6 @@ class TinyfishWithStreamedResponse:
         self._client = client
 
     @cached_property
-    def automation(self) -> automation.AutomationResourceWithStreamingResponse:
-        from .resources.automation import AutomationResourceWithStreamingResponse
-
-        return AutomationResourceWithStreamingResponse(self._client.automation)
-
-    @cached_property
     def runs(self) -> runs.RunsResourceWithStreamingResponse:
         from .resources.runs import RunsResourceWithStreamingResponse
 
@@ -469,12 +438,6 @@ class AsyncTinyfishWithStreamedResponse:
 
     def __init__(self, client: AsyncTinyfish) -> None:
         self._client = client
-
-    @cached_property
-    def automation(self) -> automation.AsyncAutomationResourceWithStreamingResponse:
-        from .resources.automation import AsyncAutomationResourceWithStreamingResponse
-
-        return AsyncAutomationResourceWithStreamingResponse(self._client.automation)
 
     @cached_property
     def runs(self) -> runs.AsyncRunsResourceWithStreamingResponse:

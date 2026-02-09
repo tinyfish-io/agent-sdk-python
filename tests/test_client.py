@@ -851,24 +851,22 @@ class TestTinyfish:
     @mock.patch("tinyfish._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter, client: Tinyfish) -> None:
-        respx_mock.post("/v1/automation/run-sse").mock(side_effect=httpx.TimeoutException("Test timeout error"))
+        respx_mock.get("/v1/runs/a1b2c3d4-e5f6-7890-abcd-ef1234567890").mock(
+            side_effect=httpx.TimeoutException("Test timeout error")
+        )
 
         with pytest.raises(APITimeoutError):
-            client.automation.with_streaming_response.run_with_sse(
-                goal="Find the pricing page and extract all plan details", url="https://example.com"
-            ).__enter__()
+            client.runs.with_streaming_response.retrieve("a1b2c3d4-e5f6-7890-abcd-ef1234567890").__enter__()
 
         assert _get_open_connections(client) == 0
 
     @mock.patch("tinyfish._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter, client: Tinyfish) -> None:
-        respx_mock.post("/v1/automation/run-sse").mock(return_value=httpx.Response(500))
+        respx_mock.get("/v1/runs/a1b2c3d4-e5f6-7890-abcd-ef1234567890").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
-            client.automation.with_streaming_response.run_with_sse(
-                goal="Find the pricing page and extract all plan details", url="https://example.com"
-            ).__enter__()
+            client.runs.with_streaming_response.retrieve("a1b2c3d4-e5f6-7890-abcd-ef1234567890").__enter__()
         assert _get_open_connections(client) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
@@ -895,11 +893,9 @@ class TestTinyfish:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/v1/automation/run-sse").mock(side_effect=retry_handler)
+        respx_mock.get("/v1/runs/a1b2c3d4-e5f6-7890-abcd-ef1234567890").mock(side_effect=retry_handler)
 
-        response = client.automation.with_raw_response.run_with_sse(
-            goal="Find the pricing page and extract all plan details", url="https://example.com"
-        )
+        response = client.runs.with_raw_response.retrieve("a1b2c3d4-e5f6-7890-abcd-ef1234567890")
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -921,12 +917,10 @@ class TestTinyfish:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/v1/automation/run-sse").mock(side_effect=retry_handler)
+        respx_mock.get("/v1/runs/a1b2c3d4-e5f6-7890-abcd-ef1234567890").mock(side_effect=retry_handler)
 
-        response = client.automation.with_raw_response.run_with_sse(
-            goal="Find the pricing page and extract all plan details",
-            url="https://example.com",
-            extra_headers={"x-stainless-retry-count": Omit()},
+        response = client.runs.with_raw_response.retrieve(
+            "a1b2c3d4-e5f6-7890-abcd-ef1234567890", extra_headers={"x-stainless-retry-count": Omit()}
         )
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
@@ -948,12 +942,10 @@ class TestTinyfish:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/v1/automation/run-sse").mock(side_effect=retry_handler)
+        respx_mock.get("/v1/runs/a1b2c3d4-e5f6-7890-abcd-ef1234567890").mock(side_effect=retry_handler)
 
-        response = client.automation.with_raw_response.run_with_sse(
-            goal="Find the pricing page and extract all plan details",
-            url="https://example.com",
-            extra_headers={"x-stainless-retry-count": "42"},
+        response = client.runs.with_raw_response.retrieve(
+            "a1b2c3d4-e5f6-7890-abcd-ef1234567890", extra_headers={"x-stainless-retry-count": "42"}
         )
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"
@@ -1765,11 +1757,13 @@ class TestAsyncTinyfish:
     async def test_retrying_timeout_errors_doesnt_leak(
         self, respx_mock: MockRouter, async_client: AsyncTinyfish
     ) -> None:
-        respx_mock.post("/v1/automation/run-sse").mock(side_effect=httpx.TimeoutException("Test timeout error"))
+        respx_mock.get("/v1/runs/a1b2c3d4-e5f6-7890-abcd-ef1234567890").mock(
+            side_effect=httpx.TimeoutException("Test timeout error")
+        )
 
         with pytest.raises(APITimeoutError):
-            await async_client.automation.with_streaming_response.run_with_sse(
-                goal="Find the pricing page and extract all plan details", url="https://example.com"
+            await async_client.runs.with_streaming_response.retrieve(
+                "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
             ).__aenter__()
 
         assert _get_open_connections(async_client) == 0
@@ -1779,11 +1773,11 @@ class TestAsyncTinyfish:
     async def test_retrying_status_errors_doesnt_leak(
         self, respx_mock: MockRouter, async_client: AsyncTinyfish
     ) -> None:
-        respx_mock.post("/v1/automation/run-sse").mock(return_value=httpx.Response(500))
+        respx_mock.get("/v1/runs/a1b2c3d4-e5f6-7890-abcd-ef1234567890").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
-            await async_client.automation.with_streaming_response.run_with_sse(
-                goal="Find the pricing page and extract all plan details", url="https://example.com"
+            await async_client.runs.with_streaming_response.retrieve(
+                "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
             ).__aenter__()
         assert _get_open_connections(async_client) == 0
 
@@ -1811,11 +1805,9 @@ class TestAsyncTinyfish:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/v1/automation/run-sse").mock(side_effect=retry_handler)
+        respx_mock.get("/v1/runs/a1b2c3d4-e5f6-7890-abcd-ef1234567890").mock(side_effect=retry_handler)
 
-        response = await client.automation.with_raw_response.run_with_sse(
-            goal="Find the pricing page and extract all plan details", url="https://example.com"
-        )
+        response = await client.runs.with_raw_response.retrieve("a1b2c3d4-e5f6-7890-abcd-ef1234567890")
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -1837,12 +1829,10 @@ class TestAsyncTinyfish:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/v1/automation/run-sse").mock(side_effect=retry_handler)
+        respx_mock.get("/v1/runs/a1b2c3d4-e5f6-7890-abcd-ef1234567890").mock(side_effect=retry_handler)
 
-        response = await client.automation.with_raw_response.run_with_sse(
-            goal="Find the pricing page and extract all plan details",
-            url="https://example.com",
-            extra_headers={"x-stainless-retry-count": Omit()},
+        response = await client.runs.with_raw_response.retrieve(
+            "a1b2c3d4-e5f6-7890-abcd-ef1234567890", extra_headers={"x-stainless-retry-count": Omit()}
         )
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
@@ -1864,12 +1854,10 @@ class TestAsyncTinyfish:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/v1/automation/run-sse").mock(side_effect=retry_handler)
+        respx_mock.get("/v1/runs/a1b2c3d4-e5f6-7890-abcd-ef1234567890").mock(side_effect=retry_handler)
 
-        response = await client.automation.with_raw_response.run_with_sse(
-            goal="Find the pricing page and extract all plan details",
-            url="https://example.com",
-            extra_headers={"x-stainless-retry-count": "42"},
+        response = await client.runs.with_raw_response.retrieve(
+            "a1b2c3d4-e5f6-7890-abcd-ef1234567890", extra_headers={"x-stainless-retry-count": "42"}
         )
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"

@@ -1,21 +1,3 @@
-# Automation
-
-Types:
-
-```python
-from tinyfish.types import (
-    AutomationRunAsyncResponse,
-    AutomationRunSyncResponse,
-    AutomationRunWithSseResponse,
-)
-```
-
-Methods:
-
-- <code title="post /v1/automation/run-async">client.automation.<a href="./src/tinyfish/resources/automation.py">run_async</a>(\*\*<a href="src/tinyfish/types/automation_run_async_params.py">params</a>) -> <a href="./src/tinyfish/types/automation_run_async_response.py">AutomationRunAsyncResponse</a></code>
-- <code title="post /v1/automation/run">client.automation.<a href="./src/tinyfish/resources/automation.py">run_sync</a>(\*\*<a href="src/tinyfish/types/automation_run_sync_params.py">params</a>) -> <a href="./src/tinyfish/types/automation_run_sync_response.py">AutomationRunSyncResponse</a></code>
-- <code title="post /v1/automation/run-sse">client.automation.<a href="./src/tinyfish/resources/automation.py">run_with_sse</a>(\*\*<a href="src/tinyfish/types/automation_run_with_sse_params.py">params</a>) -> <a href="./src/tinyfish/types/automation_run_with_sse_response.py">AutomationRunWithSseResponse</a></code>
-
 # Runs
 
 Types:
