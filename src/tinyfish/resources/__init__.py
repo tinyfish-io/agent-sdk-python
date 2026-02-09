@@ -8,8 +8,22 @@ from .runs import (
     RunsResourceWithStreamingResponse,
     AsyncRunsResourceWithStreamingResponse,
 )
+from .agent import (
+    AgentResource,
+    AsyncAgentResource,
+    AgentResourceWithRawResponse,
+    AsyncAgentResourceWithRawResponse,
+    AgentResourceWithStreamingResponse,
+    AsyncAgentResourceWithStreamingResponse,
+)
 
 __all__ = [
+    "AgentResource",
+    "AsyncAgentResource",
+    "AgentResourceWithRawResponse",
+    "AsyncAgentResourceWithRawResponse",
+    "AgentResourceWithStreamingResponse",
+    "AsyncAgentResourceWithStreamingResponse",
     "RunsResource",
     "AsyncRunsResource",
     "RunsResourceWithRawResponse",

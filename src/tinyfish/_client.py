@@ -31,8 +31,9 @@ from ._base_client import (
 )
 
 if TYPE_CHECKING:
-    from .resources import runs
+    from .resources import runs, agent
     from .resources.runs import RunsResource, AsyncRunsResource
+    from .resources.agent import AgentResource, AsyncAgentResource
 
 __all__ = [
     "Timeout",
@@ -100,6 +101,12 @@ class Tinyfish(SyncAPIClient):
             custom_query=default_query,
             _strict_response_validation=_strict_response_validation,
         )
+
+    @cached_property
+    def agent(self) -> AgentResource:
+        from .resources.agent import AgentResource
+
+        return AgentResource(self)
 
     @cached_property
     def runs(self) -> RunsResource:
@@ -276,6 +283,12 @@ class AsyncTinyfish(AsyncAPIClient):
         )
 
     @cached_property
+    def agent(self) -> AsyncAgentResource:
+        from .resources.agent import AsyncAgentResource
+
+        return AsyncAgentResource(self)
+
+    @cached_property
     def runs(self) -> AsyncRunsResource:
         from .resources.runs import AsyncRunsResource
 
@@ -401,6 +414,12 @@ class TinyfishWithRawResponse:
         self._client = client
 
     @cached_property
+    def agent(self) -> agent.AgentResourceWithRawResponse:
+        from .resources.agent import AgentResourceWithRawResponse
+
+        return AgentResourceWithRawResponse(self._client.agent)
+
+    @cached_property
     def runs(self) -> runs.RunsResourceWithRawResponse:
         from .resources.runs import RunsResourceWithRawResponse
 
@@ -412,6 +431,12 @@ class AsyncTinyfishWithRawResponse:
 
     def __init__(self, client: AsyncTinyfish) -> None:
         self._client = client
+
+    @cached_property
+    def agent(self) -> agent.AsyncAgentResourceWithRawResponse:
+        from .resources.agent import AsyncAgentResourceWithRawResponse
+
+        return AsyncAgentResourceWithRawResponse(self._client.agent)
 
     @cached_property
     def runs(self) -> runs.AsyncRunsResourceWithRawResponse:
@@ -427,6 +452,12 @@ class TinyfishWithStreamedResponse:
         self._client = client
 
     @cached_property
+    def agent(self) -> agent.AgentResourceWithStreamingResponse:
+        from .resources.agent import AgentResourceWithStreamingResponse
+
+        return AgentResourceWithStreamingResponse(self._client.agent)
+
+    @cached_property
     def runs(self) -> runs.RunsResourceWithStreamingResponse:
         from .resources.runs import RunsResourceWithStreamingResponse
 
@@ -438,6 +469,12 @@ class AsyncTinyfishWithStreamedResponse:
 
     def __init__(self, client: AsyncTinyfish) -> None:
         self._client = client
+
+    @cached_property
+    def agent(self) -> agent.AsyncAgentResourceWithStreamingResponse:
+        from .resources.agent import AsyncAgentResourceWithStreamingResponse
+
+        return AsyncAgentResourceWithStreamingResponse(self._client.agent)
 
     @cached_property
     def runs(self) -> runs.AsyncRunsResourceWithStreamingResponse:
