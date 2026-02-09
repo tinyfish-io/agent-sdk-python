@@ -102,6 +102,8 @@ class Tinyfish(SyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
+        self._default_stream_cls = Stream
+
     @cached_property
     def agent(self) -> AgentResource:
         from .resources.agent import AgentResource
@@ -281,6 +283,8 @@ class AsyncTinyfish(AsyncAPIClient):
             custom_query=default_query,
             _strict_response_validation=_strict_response_validation,
         )
+
+        self._default_stream_cls = AsyncStream
 
     @cached_property
     def agent(self) -> AsyncAgentResource:

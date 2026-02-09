@@ -106,6 +106,38 @@ async def main() -> None:
 asyncio.run(main())
 ```
 
+## Streaming responses
+
+We provide support for streaming responses using Server Side Events (SSE).
+
+```python
+from tinyfish import Tinyfish
+
+client = Tinyfish()
+
+stream = client.agent.run_with_sse(
+    goal="REPLACE_ME",
+    url="REPLACE_ME",
+)
+for response in stream:
+    print(response)
+```
+
+The async client uses the exact same interface.
+
+```python
+from tinyfish import AsyncTinyfish
+
+client = AsyncTinyfish()
+
+stream = await client.agent.run_with_sse(
+    goal="REPLACE_ME",
+    url="REPLACE_ME",
+)
+async for response in stream:
+    print(response)
+```
+
 ## Using types
 
 Nested request parameters are [TypedDicts](https://docs.python.org/3/library/typing.html#typing.TypedDict). Responses are [Pydantic models](https://docs.pydantic.dev) which also provide helper methods for things like:
