@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from typing_extensions import Literal, Required, TypedDict
 
-__all__ = ["AgentRunSyncParams", "ProxyConfig"]
+__all__ = ["AgentRunWithStreamingParams", "ProxyConfig"]
 
 
-class AgentRunSyncParams(TypedDict, total=False):
+class AgentRunWithStreamingParams(TypedDict, total=False):
     goal: Required[str]
     """Natural language description of what to accomplish on the website"""
 
