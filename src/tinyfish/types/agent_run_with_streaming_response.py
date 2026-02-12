@@ -7,7 +7,14 @@ from pydantic import Field as FieldInfo
 
 from .._models import BaseModel
 
-__all__ = ["AgentRunWithSseResponse", "UnionMember0", "UnionMember1", "UnionMember2", "UnionMember3", "UnionMember4"]
+__all__ = [
+    "AgentRunWithStreamingResponse",
+    "UnionMember0",
+    "UnionMember1",
+    "UnionMember2",
+    "UnionMember3",
+    "UnionMember4",
+]
 
 
 class UnionMember0(BaseModel):
@@ -58,4 +65,4 @@ class UnionMember4(BaseModel):
     type: Literal["PROGRESS"]
 
 
-AgentRunWithSseResponse: TypeAlias = Union[UnionMember0, UnionMember1, UnionMember2, UnionMember3, UnionMember4]
+AgentRunWithStreamingResponse: TypeAlias = Union[UnionMember0, UnionMember1, UnionMember2, UnionMember3, UnionMember4]

@@ -5,7 +5,7 @@ from typing_extensions import Literal
 
 from .._models import BaseModel
 
-__all__ = ["AgentRunSyncResponse", "Error"]
+__all__ = ["AgentRunResponse", "Error"]
 
 
 class Error(BaseModel):
@@ -15,7 +15,7 @@ class Error(BaseModel):
     """Error message describing why the run failed"""
 
 
-class AgentRunSyncResponse(BaseModel):
+class AgentRunResponse(BaseModel):
     """Automation run response.
 
     Check status to determine success/failure. On success: result is populated, error is null. On failure: result is null, error contains message.

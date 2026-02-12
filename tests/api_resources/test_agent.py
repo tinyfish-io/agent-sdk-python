@@ -10,7 +10,7 @@ import pytest
 from tinyfish import Tinyfish, AsyncTinyfish
 from tests.utils import assert_matches_type
 from tinyfish.types import (
-    AgentRunSyncResponse,
+    AgentRunResponse,
     AgentRunAsyncResponse,
 )
 
@@ -19,6 +19,57 @@ base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
 class TestAgent:
     parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_method_run(self, client: Tinyfish) -> None:
+        agent = client.agent.run(
+            goal="Find the pricing page and extract all plan details",
+            url="https://example.com",
+        )
+        assert_matches_type(AgentRunResponse, agent, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_method_run_with_all_params(self, client: Tinyfish) -> None:
+        agent = client.agent.run(
+            goal="Find the pricing page and extract all plan details",
+            url="https://example.com",
+            browser_profile="lite",
+            proxy_config={
+                "enabled": True,
+                "country_code": "US",
+            },
+        )
+        assert_matches_type(AgentRunResponse, agent, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_raw_response_run(self, client: Tinyfish) -> None:
+        response = client.agent.with_raw_response.run(
+            goal="Find the pricing page and extract all plan details",
+            url="https://example.com",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        agent = response.parse()
+        assert_matches_type(AgentRunResponse, agent, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_streaming_response_run(self, client: Tinyfish) -> None:
+        with client.agent.with_streaming_response.run(
+            goal="Find the pricing page and extract all plan details",
+            url="https://example.com",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            agent = response.parse()
+            assert_matches_type(AgentRunResponse, agent, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
 
     @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
@@ -71,61 +122,10 @@ class TestAgent:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
-    @parametrize
-    def test_method_run_sync(self, client: Tinyfish) -> None:
-        agent = client.agent.run_sync(
-            goal="Find the pricing page and extract all plan details",
-            url="https://example.com",
-        )
-        assert_matches_type(AgentRunSyncResponse, agent, path=["response"])
-
-    @pytest.mark.skip(reason="Prism tests are disabled")
-    @parametrize
-    def test_method_run_sync_with_all_params(self, client: Tinyfish) -> None:
-        agent = client.agent.run_sync(
-            goal="Find the pricing page and extract all plan details",
-            url="https://example.com",
-            browser_profile="lite",
-            proxy_config={
-                "enabled": True,
-                "country_code": "US",
-            },
-        )
-        assert_matches_type(AgentRunSyncResponse, agent, path=["response"])
-
-    @pytest.mark.skip(reason="Prism tests are disabled")
-    @parametrize
-    def test_raw_response_run_sync(self, client: Tinyfish) -> None:
-        response = client.agent.with_raw_response.run_sync(
-            goal="Find the pricing page and extract all plan details",
-            url="https://example.com",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        agent = response.parse()
-        assert_matches_type(AgentRunSyncResponse, agent, path=["response"])
-
-    @pytest.mark.skip(reason="Prism tests are disabled")
-    @parametrize
-    def test_streaming_response_run_sync(self, client: Tinyfish) -> None:
-        with client.agent.with_streaming_response.run_sync(
-            goal="Find the pricing page and extract all plan details",
-            url="https://example.com",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            agent = response.parse()
-            assert_matches_type(AgentRunSyncResponse, agent, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
     @pytest.mark.skip(reason="Prism doesn't support text/event-stream responses")
     @parametrize
-    def test_method_run_with_sse(self, client: Tinyfish) -> None:
-        agent_stream = client.agent.run_with_sse(
+    def test_method_run_with_streaming(self, client: Tinyfish) -> None:
+        agent_stream = client.agent.run_with_streaming(
             goal="Find the pricing page and extract all plan details",
             url="https://example.com",
         )
@@ -133,8 +133,8 @@ class TestAgent:
 
     @pytest.mark.skip(reason="Prism doesn't support text/event-stream responses")
     @parametrize
-    def test_method_run_with_sse_with_all_params(self, client: Tinyfish) -> None:
-        agent_stream = client.agent.run_with_sse(
+    def test_method_run_with_streaming_with_all_params(self, client: Tinyfish) -> None:
+        agent_stream = client.agent.run_with_streaming(
             goal="Find the pricing page and extract all plan details",
             url="https://example.com",
             browser_profile="lite",
@@ -147,8 +147,8 @@ class TestAgent:
 
     @pytest.mark.skip(reason="Prism doesn't support text/event-stream responses")
     @parametrize
-    def test_raw_response_run_with_sse(self, client: Tinyfish) -> None:
-        response = client.agent.with_raw_response.run_with_sse(
+    def test_raw_response_run_with_streaming(self, client: Tinyfish) -> None:
+        response = client.agent.with_raw_response.run_with_streaming(
             goal="Find the pricing page and extract all plan details",
             url="https://example.com",
         )
@@ -159,8 +159,8 @@ class TestAgent:
 
     @pytest.mark.skip(reason="Prism doesn't support text/event-stream responses")
     @parametrize
-    def test_streaming_response_run_with_sse(self, client: Tinyfish) -> None:
-        with client.agent.with_streaming_response.run_with_sse(
+    def test_streaming_response_run_with_streaming(self, client: Tinyfish) -> None:
+        with client.agent.with_streaming_response.run_with_streaming(
             goal="Find the pricing page and extract all plan details",
             url="https://example.com",
         ) as response:
@@ -177,6 +177,57 @@ class TestAsyncAgent:
     parametrize = pytest.mark.parametrize(
         "async_client", [False, True, {"http_client": "aiohttp"}], indirect=True, ids=["loose", "strict", "aiohttp"]
     )
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_method_run(self, async_client: AsyncTinyfish) -> None:
+        agent = await async_client.agent.run(
+            goal="Find the pricing page and extract all plan details",
+            url="https://example.com",
+        )
+        assert_matches_type(AgentRunResponse, agent, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_method_run_with_all_params(self, async_client: AsyncTinyfish) -> None:
+        agent = await async_client.agent.run(
+            goal="Find the pricing page and extract all plan details",
+            url="https://example.com",
+            browser_profile="lite",
+            proxy_config={
+                "enabled": True,
+                "country_code": "US",
+            },
+        )
+        assert_matches_type(AgentRunResponse, agent, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_raw_response_run(self, async_client: AsyncTinyfish) -> None:
+        response = await async_client.agent.with_raw_response.run(
+            goal="Find the pricing page and extract all plan details",
+            url="https://example.com",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        agent = await response.parse()
+        assert_matches_type(AgentRunResponse, agent, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_streaming_response_run(self, async_client: AsyncTinyfish) -> None:
+        async with async_client.agent.with_streaming_response.run(
+            goal="Find the pricing page and extract all plan details",
+            url="https://example.com",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            agent = await response.parse()
+            assert_matches_type(AgentRunResponse, agent, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
 
     @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
@@ -229,61 +280,10 @@ class TestAsyncAgent:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
-    @parametrize
-    async def test_method_run_sync(self, async_client: AsyncTinyfish) -> None:
-        agent = await async_client.agent.run_sync(
-            goal="Find the pricing page and extract all plan details",
-            url="https://example.com",
-        )
-        assert_matches_type(AgentRunSyncResponse, agent, path=["response"])
-
-    @pytest.mark.skip(reason="Prism tests are disabled")
-    @parametrize
-    async def test_method_run_sync_with_all_params(self, async_client: AsyncTinyfish) -> None:
-        agent = await async_client.agent.run_sync(
-            goal="Find the pricing page and extract all plan details",
-            url="https://example.com",
-            browser_profile="lite",
-            proxy_config={
-                "enabled": True,
-                "country_code": "US",
-            },
-        )
-        assert_matches_type(AgentRunSyncResponse, agent, path=["response"])
-
-    @pytest.mark.skip(reason="Prism tests are disabled")
-    @parametrize
-    async def test_raw_response_run_sync(self, async_client: AsyncTinyfish) -> None:
-        response = await async_client.agent.with_raw_response.run_sync(
-            goal="Find the pricing page and extract all plan details",
-            url="https://example.com",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        agent = await response.parse()
-        assert_matches_type(AgentRunSyncResponse, agent, path=["response"])
-
-    @pytest.mark.skip(reason="Prism tests are disabled")
-    @parametrize
-    async def test_streaming_response_run_sync(self, async_client: AsyncTinyfish) -> None:
-        async with async_client.agent.with_streaming_response.run_sync(
-            goal="Find the pricing page and extract all plan details",
-            url="https://example.com",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            agent = await response.parse()
-            assert_matches_type(AgentRunSyncResponse, agent, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
     @pytest.mark.skip(reason="Prism doesn't support text/event-stream responses")
     @parametrize
-    async def test_method_run_with_sse(self, async_client: AsyncTinyfish) -> None:
-        agent_stream = await async_client.agent.run_with_sse(
+    async def test_method_run_with_streaming(self, async_client: AsyncTinyfish) -> None:
+        agent_stream = await async_client.agent.run_with_streaming(
             goal="Find the pricing page and extract all plan details",
             url="https://example.com",
         )
@@ -291,8 +291,8 @@ class TestAsyncAgent:
 
     @pytest.mark.skip(reason="Prism doesn't support text/event-stream responses")
     @parametrize
-    async def test_method_run_with_sse_with_all_params(self, async_client: AsyncTinyfish) -> None:
-        agent_stream = await async_client.agent.run_with_sse(
+    async def test_method_run_with_streaming_with_all_params(self, async_client: AsyncTinyfish) -> None:
+        agent_stream = await async_client.agent.run_with_streaming(
             goal="Find the pricing page and extract all plan details",
             url="https://example.com",
             browser_profile="lite",
@@ -305,8 +305,8 @@ class TestAsyncAgent:
 
     @pytest.mark.skip(reason="Prism doesn't support text/event-stream responses")
     @parametrize
-    async def test_raw_response_run_with_sse(self, async_client: AsyncTinyfish) -> None:
-        response = await async_client.agent.with_raw_response.run_with_sse(
+    async def test_raw_response_run_with_streaming(self, async_client: AsyncTinyfish) -> None:
+        response = await async_client.agent.with_raw_response.run_with_streaming(
             goal="Find the pricing page and extract all plan details",
             url="https://example.com",
         )
@@ -317,8 +317,8 @@ class TestAsyncAgent:
 
     @pytest.mark.skip(reason="Prism doesn't support text/event-stream responses")
     @parametrize
-    async def test_streaming_response_run_with_sse(self, async_client: AsyncTinyfish) -> None:
-        async with async_client.agent.with_streaming_response.run_with_sse(
+    async def test_streaming_response_run_with_streaming(self, async_client: AsyncTinyfish) -> None:
+        async with async_client.agent.with_streaming_response.run_with_streaming(
             goal="Find the pricing page and extract all plan details",
             url="https://example.com",
         ) as response:

@@ -32,9 +32,10 @@ client = Tinyfish(
     api_key=os.environ.get("TINYFISH_API_KEY"),  # This is the default and can be omitted
 )
 
-response = client.agent.run_with_sse(
-    goal="REPLACE_ME",
-    url="REPLACE_ME",
+response = client.agent.run_with_streaming(
+    goal="Find the price of the latest iPhone and check trade-in options",
+    url="https://www.apple.com",
+    browser_profile="stealth",
 )
 ```
 
@@ -58,9 +59,10 @@ client = AsyncTinyfish(
 
 
 async def main() -> None:
-    response = await client.agent.run_with_sse(
-        goal="REPLACE_ME",
-        url="REPLACE_ME",
+    response = await client.agent.run_with_streaming(
+        goal="Find the price of the latest iPhone and check trade-in options",
+        url="https://www.apple.com",
+        browser_profile="stealth",
     )
 
 
@@ -94,9 +96,10 @@ async def main() -> None:
         api_key=os.environ.get("TINYFISH_API_KEY"),  # This is the default and can be omitted
         http_client=DefaultAioHttpClient(),
     ) as client:
-        response = await client.agent.run_with_sse(
-            goal="REPLACE_ME",
-            url="REPLACE_ME",
+        response = await client.agent.run_with_streaming(
+            goal="Find the price of the latest iPhone and check trade-in options",
+            url="https://www.apple.com",
+            browser_profile="stealth",
         )
 
 
@@ -112,9 +115,10 @@ from tinyfish import Tinyfish
 
 client = Tinyfish()
 
-stream = client.agent.run_with_sse(
-    goal="REPLACE_ME",
-    url="REPLACE_ME",
+stream = client.agent.run_with_streaming(
+    goal="Find the price of the latest iPhone and check trade-in options",
+    url="https://www.apple.com",
+    browser_profile="stealth",
 )
 for response in stream:
     print(response)
@@ -127,9 +131,10 @@ from tinyfish import AsyncTinyfish
 
 client = AsyncTinyfish()
 
-stream = await client.agent.run_with_sse(
-    goal="REPLACE_ME",
-    url="REPLACE_ME",
+stream = await client.agent.run_with_streaming(
+    goal="Find the price of the latest iPhone and check trade-in options",
+    url="https://www.apple.com",
+    browser_profile="stealth",
 )
 async for response in stream:
     print(response)
@@ -153,7 +158,7 @@ from tinyfish import Tinyfish
 
 client = Tinyfish()
 
-response = client.agent.run_with_sse(
+response = client.agent.run_with_streaming(
     goal="Find the pricing page and extract all plan details",
     url="https://example.com",
     proxy_config={"enabled": True},
@@ -177,9 +182,9 @@ from tinyfish import Tinyfish
 client = Tinyfish()
 
 try:
-    client.agent.run_with_sse(
-        goal="REPLACE_ME",
-        url="REPLACE_ME",
+    client.agent.run(
+        goal="Extract the top 5 stories and their upvote counts",
+        url="https://news.ycombinator.com",
     )
 except tinyfish.APIConnectionError as e:
     print("The server could not be reached")
@@ -223,9 +228,9 @@ client = Tinyfish(
 )
 
 # Or, configure per-request:
-client.with_options(max_retries=5).agent.run_with_sse(
-    goal="REPLACE_ME",
-    url="REPLACE_ME",
+client.with_options(max_retries=5).agent.run(
+    goal="Extract the top 5 stories and their upvote counts",
+    url="https://news.ycombinator.com",
 )
 ```
 
@@ -249,9 +254,9 @@ client = Tinyfish(
 )
 
 # Override per-request:
-client.with_options(timeout=5.0).agent.run_with_sse(
-    goal="REPLACE_ME",
-    url="REPLACE_ME",
+client.with_options(timeout=5.0).agent.run(
+    goal="Extract the top 5 stories and their upvote counts",
+    url="https://news.ycombinator.com",
 )
 ```
 
@@ -293,14 +298,14 @@ The "raw" Response object can be accessed by prefixing `.with_raw_response.` to 
 from tinyfish import Tinyfish
 
 client = Tinyfish()
-response = client.agent.with_raw_response.run_with_sse(
-    goal="REPLACE_ME",
-    url="REPLACE_ME",
+response = client.agent.with_raw_response.run(
+    goal="Extract the top 5 stories and their upvote counts",
+    url="https://news.ycombinator.com",
 )
 print(response.headers.get('X-My-Header'))
 
-agent = response.parse()  # get the object that `agent.run_with_sse()` would have returned
-print(agent)
+agent = response.parse()  # get the object that `agent.run()` would have returned
+print(agent.run_id)
 ```
 
 These methods return an [`APIResponse`](https://github.com/tinyfish-io/agent-sdk-python/tree/main/src/tinyfish/_response.py) object.
@@ -314,9 +319,9 @@ The above interface eagerly reads the full response body when you make the reque
 To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
 
 ```python
-with client.agent.with_streaming_response.run_with_sse(
-    goal="REPLACE_ME",
-    url="REPLACE_ME",
+with client.agent.with_streaming_response.run(
+    goal="Extract the top 5 stories and their upvote counts",
+    url="https://news.ycombinator.com",
 ) as response:
     print(response.headers.get("X-My-Header"))
 

@@ -3,14 +3,14 @@
 Types:
 
 ```python
-from tinyfish.types import AgentRunAsyncResponse, AgentRunSyncResponse, AgentRunWithSseResponse
+from tinyfish.types import AgentRunResponse, AgentRunAsyncResponse, AgentRunWithStreamingResponse
 ```
 
 Methods:
 
+- <code title="post /v1/automation/run">client.agent.<a href="./src/tinyfish/resources/agent.py">run</a>(\*\*<a href="src/tinyfish/types/agent_run_params.py">params</a>) -> <a href="./src/tinyfish/types/agent_run_response.py">AgentRunResponse</a></code>
 - <code title="post /v1/automation/run-async">client.agent.<a href="./src/tinyfish/resources/agent.py">run_async</a>(\*\*<a href="src/tinyfish/types/agent_run_async_params.py">params</a>) -> <a href="./src/tinyfish/types/agent_run_async_response.py">AgentRunAsyncResponse</a></code>
-- <code title="post /v1/automation/run">client.agent.<a href="./src/tinyfish/resources/agent.py">run_sync</a>(\*\*<a href="src/tinyfish/types/agent_run_sync_params.py">params</a>) -> <a href="./src/tinyfish/types/agent_run_sync_response.py">AgentRunSyncResponse</a></code>
-- <code title="post /v1/automation/run-sse">client.agent.<a href="./src/tinyfish/resources/agent.py">run_with_sse</a>(\*\*<a href="src/tinyfish/types/agent_run_with_sse_params.py">params</a>) -> <a href="./src/tinyfish/types/agent_run_with_sse_response.py">AgentRunWithSseResponse</a></code>
+- <code title="post /v1/automation/run-sse">client.agent.<a href="./src/tinyfish/resources/agent.py">run_with_streaming</a>(\*\*<a href="src/tinyfish/types/agent_run_with_streaming_params.py">params</a>) -> <a href="./src/tinyfish/types/agent_run_with_streaming_response.py">AgentRunWithStreamingResponse</a></code>
 
 # Runs
 
