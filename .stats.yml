@@ -1,4 +1,4 @@
 configured_endpoints: 5
 openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/tinyfish%2Ftinyfish-02840372e03c625b85c53b53787652fbcee220f0a7d28641d90c7333ffdb038d.yml
 openapi_spec_hash: 2a21f33ac3e89cd133e68bcaf83f29e6
-config_hash: 065df6e8fb9322fc629cb4a550825b03
+config_hash: da4b2c49ff8b4e3b7b8a9313f8c6cb41
